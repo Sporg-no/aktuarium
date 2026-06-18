@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aktuarium — Hva koster eldreomsorg familien din? Uavhengig kalkulator uten provisjon</title>
+<meta name="description" content="Aktuarium er den uavhengige kalkulatoren som regner ut hva eldreomsorg faktisk koster familien din — offentlig plass, hjemmetjenester eller privat pleie. Ingen forsikring. Ingen provisjon. Bare tallene." />
+<meta property="og:title" content="Aktuarium — Hva koster eldreomsorg familien din?" />
+<meta property="og:description" content="Uavhengig kalkulator som sammenligner egenfinansiering, offentlig tilbud med egenandel og privat pleie. Ingen provisjon." />
+<meta property="og:locale" content="nb_NO" />
+<meta property="og:type" content="website" />
+<style>
+  :root {
+    --green: #0E5C5B;
+    --green-dark: #0A4544;
+    --green-700: #0B4F4E;
+    --offwhite: #FAF7F2;
+    --ink: #1C2B2A;
+    --muted: #5A6B69;
+    --line: #E3DDD2;
+    --gold: #C9A227;
+    --grey-strip: #F1ECE3;
+    --white: #FFFFFF;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(14, 92, 91, 0.12);
+    --shadow-sm: 0 4px 14px rgba(14, 92, 91, 0.08);
+    --maxw: 1120px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--offwhite);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.01em; }
+  h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 0 0 0.4em; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin: 0 0 0.5em; }
+  h3 { font-size: 1.25rem; margin: 0 0 0.3em; }
+  p { margin: 0 0 1em; }
+  a { color: var(--green); }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+  .section { padding: 64px 0; }
+  .section--tight { padding: 44px 0; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--green);
+    margin: 0 0 10px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 16px 28px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+  }
+  .btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .btn--lg { font-size: 1.15rem; padding: 18px 34px; }
+  .btn--ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.6); box-shadow: none; }
+  .btn--ghost:hover { background: rgba(255,255,255,.12); }
+  .btn--block { display: block; width: 100%; }
+
+  .microcopy { font-size: 0.92rem; color: var(--muted); margin-top: 10px; }
+
+  .textlink {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .textlink:hover { border-bottom-color: var(--green); }
+
+  /* ---------- Header ---------- */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 247, 242, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { font-weight: 800; font-size: 1.3rem; color: var(--green); text-decoration: none; letter-spacing: -0.02em; }
+  .logo span { color: var(--gold); }
+  .nav-links { display: none; align-items: center; gap: 26px; }
+  .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.98rem; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { padding: 11px 20px; font-size: 0.98rem; }
+
+  @media (min-width: 860px) {
+    .nav-links { display: flex; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 56px 0 36px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+  .hero h1 .sub-h { display: block; font-size: 0.62em; color: var(--muted); font-weight: 700; margin-top: 8px; }
+  .hero .lede { font-size: 1.18rem; color: var(--ink); max-width: 36ch; }
+  .hero-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 26px; }
+  .stars { color: var(--gold); letter-spacing: 2px; }
+  .hero-proof {
+    margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 0.98rem; color: var(--muted);
+  }
+  .hero-proof strong { color: var(--ink); }
+
+  .hero-visual {
+    background: #fff; border-radius: 20px; box-shadow: var(--shadow);
+    padding: 22px; border: 1px solid var(--line);
+  }
+  .matrix-title { font-size: 0.95rem; color: var(--muted); margin-bottom: 4px; }
+  .matrix-person { font-weight: 700; margin-bottom: 16px; }
+  .matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .matrix-col { background: var(--offwhite); border-radius: 12px; padding: 14px 12px; text-align: center; border: 1px solid var(--line); }
+  .matrix-col h4 { margin: 0 0 10px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .matrix-col .big { font-size: 1.25rem; font-weight: 800; color: var(--green); }
+  .matrix-col .lbl { font-size: 0.75rem; color: var(--muted); }
+  .matrix-col--best { background: #EAF4F2; border-color: var(--green); }
+  .matrix-bar { height: 6px; border-radius: 4px; background: var(--green); margin: 12px 0 6px; opacity: .85; }
+  .matrix-foot { margin-top: 16px; font-size: 0.85rem; color: var(--muted); text-align: center; }
+
+  @media (min-width: 900px) {
+    .hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 56px; }
+  }
+
+  /* ---------- Trust strip ---------- */
+  .trust { background: var(--grey-strip); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .trust-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 26px; }
+  .badge {
+    background: #fff; border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 15px; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+  }
+  .stats { display: grid; grid-template-columns: 1fr; gap: 18px; text-align: center; }
+  .stat .num { font-size: 2rem; font-weight: 800; color: var(--green); }
+  .stat .desc { font-size: 0.92rem; color: var(--muted); }
+  .trust-quote { text-align: center; margin-top: 28px; font-size: 1.1rem; font-style: italic; color: var(--ink); }
+  @media (min-width: 760px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+
+  /* ---------- Generic cards ---------- */
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 720px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 900px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; box-shadow: var(--shadow-sm);
+  }
+  .card .icon { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+  .card h3 { font-size: 1.12rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.98rem; }
+
+  .lead { font-size: 1.18rem; color: var(--muted); max-width: 60ch; }
+
+  /* ---------- Problem diagram ---------- */
+  .problem-visual {
+    margin-top: 36px; background: #fff; border: 1px dashed var(--line);
+    border-radius: var(--radius); padding: 28px; text-align: center; color: var(--muted);
+  }
+  .problem-visual .center-pill {
+    display: inline-block; background: var(--green); color: #fff; font-weight: 700;
+    padding: 10px 22px; border-radius: 999px; margin: 10px 0;
+  }
+  .arrows { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 8px; }
+  .arrows span { background: var(--offwhite); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 0.85rem; }
+
+  /* ---------- Steps ---------- */
+  .steps { display: grid; grid-template-columns: 1fr; gap: 26px; counter-reset: step; }
+  @media (min-width: 820px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { text-align: center; }
+  .step .circle {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--green); color: #fff;
+    font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  /* ---------- Section heads ---------- */
+  .sec-head { max-width: 720px; }
+  .sec-head--center { margin: 0 auto; text-align: center; }
+
+  /* ---------- Testimonials ---------- */
+  .quote-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-sm); }
+  .quote-card blockquote { margin: 0 0 18px; font-size: 1.05rem; }
+  .person { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .person .meta { font-size: 0.9rem; }
+  .person .meta strong { display: block; }
+  .person .meta span { color: var(--muted); }
+  .proof-extra { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
+  @media (min-width: 760px) { .proof-extra { grid-template-columns: repeat(2, 1fr); } }
+  .proof-pill { background: #EAF4F2; border: 1px solid var(--green); border-radius: var(--radius); padding: 18px 22px; font-weight: 600; }
+
+  /* ---------- Pricing ---------- */
+  .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: stretch; }
+  @media (min-width: 920px) { .pricing-grid { grid-template-columns: repeat(3, 1fr); } }
+  .price-card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 28px; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
+  }
+  .price-card--featured { border: 2px solid var(--green); box-shadow: var(--shadow); position: relative; }
+  .ribbon {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: #1C2B2A; font-weight: 800; font-size: 0.78rem;
+    padding: 5px 14px; border-radius: 999px; letter-spacing: .03em; white-space: nowrap;
+  }
+  .price-card h3 { font-size: 1.1rem; }
+  .price { font-size: 2rem; font-weight: 800; color: var(--green); margin: 6px 0 4px; }
+  .price small { font-size: 0.9rem; font-weight: 600; color: var(--muted); }
+  .price-card ul { list-style: none; padding: 0; margin: 14px 0 22px; flex-grow: 1; }
+  .price-card li { padding: 8px 0 8px 26px; position: relative; color: var(--ink); font-size: 0.96rem; border-bottom: 1px solid var(--line); }
+  .price-card li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+  .price-best { font-size: 0.85rem; color: var(--muted); margin-top: 12px; text-align: center; }
+  .price-note { text-align: center; color: var(--muted); font-size: 0.92rem; margin-top: 22px; }
+
+  /* ---------- Advisor band ---------- */
+  .advisor { background: var(--green); color: #fff; }
+  .advisor h2 { color: #fff; }
+  .advisor p { color: rgba(255,255,255,.85); max-width: 60ch; }
+  .advisor .eyebrow { color: var(--gold); }
+
+  /* ---------- FAQ ---------- */
+  .faq-list { max-width: 800px; margin: 0 auto; }
+  details.faq {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    margin-bottom: 14px; padding: 0 22px; box-shadow: var(--shadow-sm);
+  }
+  details.faq summary {
+    list-style: none; cursor: pointer; font-weight: 700; font-size: 1.08rem;
+    padding: 20px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after { content: "+"; font-size: 1.5rem; color: var(--green); font-weight: 400; transition: transform .2s; }
+  details.faq[open] summary::after { content: "−"; }
+  details.faq .answer { padding: 0 0 20px; color: var(--muted); }
+
+  /* ---------- Final CTA ---------- */
+  .final {
+    background: linear-gradient(160deg, var(--green) 0%, var(--green-dark) 100%);
+    color: #fff; text-align: center;
+  }
+  .final h2 { color: #fff; }
+  .final .sub-h { display: block; font-size: 0.6em; color: rgba(255,255,255,.8); font-weight: 600; margin-top: 8px; }
+  .final p { color: rgba(255,255,255,.85); }
+  .guarantee {
+    display: inline-block; margin: 22px auto 0; background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.25); border-radius: var(--radius); padding: 16px 24px;
+    font-size: 0.98rem; max-width: 560px;
+  }
+  .final-cta-row { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 28px; }
+  .btn--gold { background: var(--gold); color: #1C2B2A; }
+  .btn--gold:hover { background: #b8911f; }
+
+  /* ---------- Footer ---------- */
+  footer.site {
+    background: var(--ink); color: rgba(255,255,255,.75); padding: 54px 0 30px; font-size: 0.95rem;
+  }
+  footer.site a { color: rgba(255,255,255,.85); text-decoration: none; }
+  footer.site a:hover { color: #fff; text-decoration: underline; }
+  .foot-grid { display: grid; grid-template-columns: 1fr; gap: 28px; margin-bottom: 32px; }
+  @media (min-width: 760px) { .foot-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+  .foot-grid h4 { color: #fff; font-size: 1rem; margin: 0 0 12px; }
+  .foot-links { list-style: none; padding: 0; margin: 0; }
+  .foot-links li { margin-bottom: 8px; }
+  .foot-legal { border-top: 1px solid rgba(255,255,255,.15); padding-top: 22px; font-size: 0.82rem; color: rgba(255,255,255,.55); }
+
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 16px; background: #fff; color: var(--green); padding: 10px 16px; border-radius: 8px; z-index: 100; }
+</style>
+</head>
+<body>
+<a class="skip" href="#hovedinnhold">Hopp til hovedinnhold</a>
+
+<!-- ===== HEADER / NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo">Aktu<span>arium</span></a>
+    <nav class="nav-links" aria-label="Hovedmeny">
+      <a href="#slik">Slik funker det</a>
+      <a href="#priser">Priser</a>
+      <a href="#faq">FAQ</a>
+      <a href="#start" class="btn nav-cta">Start gratis →</a>
+    </nav>
+  </div>
+</header>
+
+<main id="hovedinnhold">
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1>Tror du staten dekker alt når mor eller far trenger pleie?
+        <span class="sub-h">Tallene sier noe annet.</span>
+      </h1>
+      <p class="lede">Aktuarium er den uavhengige kalkulatoren som regner ut hva eldreomsorg faktisk vil koste familien din — offentlig plass, hjemmetjenester eller privat pleie. Vi selger ingen forsikring og tar ingen provisjon. Bare tallene.</p>
+      <div class="hero-cta-row">
+        <a href="#start" class="btn btn--lg">Regn ut min families situasjon — gratis</a>
+        <a href="#losning" class="textlink">Se et eksempel på rapporten →</a>
+      </div>
+      <p class="microcopy">Tar 4 minutter. Ingen kortinfo. Ingen selger ringer.</p>
+      <div class="hero-proof">
+        <span class="stars" aria-label="Fem av fem stjerner">★★★★★</span>
+        «Endelig et regnestykke uten en selger på andre siden.»<br />
+        <strong>Brukt av over 1 200 norske familier</strong> · Data fra SSB, Helsedirektoratet og kommunale satser
+      </div>
+    </div>
+
+    <!-- Hero visual: comparison matrix mockup -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="matrix-title">Sammenligning over 20 år</div>
+      <div class="matrix-person">Anne, 58 år · Bærum · 4,2 mill. i formue</div>
+      <div class="matrix">
+        <div class="matrix-col">
+          <h4>Egen­finansiering</h4>
+          <div class="matrix-bar" style="width:90%"></div>
+          <div class="big">1,9 mill.</div>
+          <div class="lbl">igjen til familien</div>
+        </div>
+        <div class="matrix-col matrix-col--best">
+          <h4>Offentlig + egenandel</h4>
+          <div class="matrix-bar" style="width:60%"></div>
+          <div class="big">2,8 mill.</div>
+          <div class="lbl">igjen til familien</div>
+        </div>
+        <div class="matrix-col">
+          <h4>Privat pleie</h4>
+          <div class="matrix-bar" style="width:100%"></div>
+          <div class="big">0,7 mill.</div>
+          <div class="lbl">igjen til familien</div>
+        </div>
+      </div>
+      <div class="matrix-foot">Inkl. prisvekst, formuesuttak og egenandeler</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUST STRIP ===== -->
+<section class="trust section--tight">
+  <div class="wrap">
+    <div class="trust-badges">
+      <span class="badge">Data fra SSB</span>
+      <span class="badge">Helsenorge</span>
+      <span class="badge">Helsedirektoratet</span>
+      <span class="badge">Kommunale egenandelssatser</span>
+      <span class="badge">🔒 GDPR · Data lagres i Norge/EU</span>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">80 080 kr</div>
+        <div class="desc">ca. kostnad per år for omfattende hjemmehjelp privat</div>
+      </div>
+      <div class="stat">
+        <div class="num">85 %</div>
+        <div class="desc">inntil så mye av inntekten kan gå til egenandel på sykehjem</div>
+      </div>
+      <div class="stat">
+        <div class="num">0 kr</div>
+        <div class="desc">i provisjon — vi tjener aldri på hva du velger</div>
+      </div>
+    </div>
+    <p class="trust-quote">«Jeg trodde vi var trygge. Aktuarium viste at vi manglet 1,1 millioner i planen vår.» — Bruker, 61 år</p>
+  </div>
+</section>
+
+<!-- ===== PROBLEM ===== -->
+<section class="section" id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Problemet</p>
+      <h2>Alle som gir deg svar, har noe å selge</h2>
+      <p class="lead">Forsikringsselgeren tjener provisjon. Banken vil ha sparepengene dine. Det private sykehjemmet vil ha plassen fylt. Og det offentlige forteller deg sjelden hva du faktisk må betale selv.</p>
+    </div>
+
+    <div class="grid-2" style="margin-top:36px">
+      <div class="card">
+        <span class="icon">🏥</span>
+        <h3>«Staten ordner alt» — helt til regningen kommer</h3>
+        <p>Sykehjemsplass koster egenandel basert på inntekt: opptil 75–85 % av inntekten din over et visst nivå. Pensjon, leieinntekter og avkastning kan forsvinne i egenandel.</p>
+      </div>
+      <div class="card">
+        <span class="icon">⏳</span>
+        <h3>Ventelistene er lange, og kvaliteten varierer</h3>
+        <p>Mens dere venter på plass, må familien ofte betale for hjemmehjelp, dagsenter eller privat pleie selv — uten at noen har fortalt hva det summerer seg til.</p>
+      </div>
+      <div class="card">
+        <span class="icon">💸</span>
+        <h3>Privat pleie kan spise opp arven på få år</h3>
+        <p>Private sykehjems- og bofellesskapsplasser koster typisk 40 000–90 000 kr i måneden. Få familier har regnet på hva 3–5 år med slik pleie gjør med formuen og arven.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🤐</span>
+        <h3>Ingen gir deg det hele bildet</h3>
+        <p>Det finnes ingen nøytral oversikt som sammenligner egenfinansiering, offentlig tilbud med egenandel og privat pleie — side om side, med dine egne tall.</p>
+      </div>
+    </div>
+
+    <div class="problem-visual">
+      <div class="arrows">
+        <span>Forsikringsselger →</span>
+        <span>Bank →</span>
+        <span>← Privat pleieaktør</span>
+        <span>← Det offentlige</span>
+      </div>
+      <div class="center-pill">Familien din</div>
+      <p style="margin:0">Fire kilder. Fire agendaer. Null helhet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOLUTION ===== -->
+<section class="section" id="losning" style="background:var(--grey-strip); border-top:1px solid var(--line); border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Løsningen</p>
+      <h2>Ett nøytralt regnestykke. Dine tall. Null skjult agenda.</h2>
+      <p class="lead">Aktuarium henter offentlige data — SSB-kostnader, kommunale egenandelssatser, ventetidsstatistikk og aktuartabeller — og regner ut hva hver vei faktisk koster familien din over 20 år. Du svarer på noen spørsmål om helse, økonomi og bosted. Vi gir deg en lettlest rapport du kan dele med familien og en uavhengig rådgiver.</p>
+    </div>
+    <div class="grid-3" style="margin-top:32px">
+      <div class="card">
+        <span class="icon">🔍</span>
+        <h3>Du ser sannheten i kroner</h3>
+        <p>Hva hver vei koster, og hva som er igjen til familien etter 20 år.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🚫</span>
+        <h3>Du slipper salgspresset</h3>
+        <p>Vi tar ingen provisjon og selger ingen forsikring. Inntekten vår er kun det du betaler oss.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🧭</span>
+        <h3>Du får handlingsrom</h3>
+        <p>Beslutninger tatt i ro er bedre enn beslutninger tatt etter et fall eller en diagnose.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:34px">
+      <a href="#start" class="btn">Se eksempelrapport (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section" id="slik">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <p class="eyebrow">Slik funker det</p>
+      <h2>Fra forvirring til klarhet på 4 minutter</h2>
+    </div>
+    <div class="steps" style="margin-top:40px">
+      <div class="step">
+        <div class="circle">1</div>
+        <h3>Fortell oss om situasjonen</h3>
+        <p style="color:var(--muted)">Alder, helse, formue, bolig og kommune. Enkle spørsmål, ingen sensitive detaljer lagres lenger enn nødvendig.</p>
+      </div>
+      <div class="step">
+        <div class="circle">2</div>
+        <h3>Vi regner — på offentlige data</h3>
+        <p style="color:var(--muted)">Aktuarium sammenligner egenfinansiering, offentlig tilbud med egenandel og privat pleie. Vi tar med prisvekst, formuesuttak og dekningshull selgere hopper over.</p>
+      </div>
+      <div class="step">
+        <div class="circle">3</div>
+        <h3>Du får rapporten — klar til å dele</h3>
+        <p style="color:var(--muted)">En lettlest PDF som viser hva hver vei koster og hva som er igjen til familien. Del den trygt med søsken, foreldre eller en uavhengig rådgiver.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section" id="funksjoner" style="background:var(--grey-strip); border-top:1px solid var(--line); border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <p class="eyebrow">Funksjoner</p>
+      <h2>Bygget for å gi deg svar — ikke selge deg noe</h2>
+    </div>
+    <div class="grid-3" style="margin-top:36px">
+      <div class="card"><span class="icon">⚖️</span><h3>Side-om-side-matrise</h3><p>Egenfinansiering vs. offentlig + egenandel vs. privat pleie. Alt i kroner, over 20 år.</p></div>
+      <div class="card"><span class="icon">📈</span><h3>Realistisk prisvekst innebygd</h3><p>Vi regner inn forventet kostnadsvekst og formuesuttak — ikke dagens pris fryst i tid.</p></div>
+      <div class="card"><span class="icon">🇳🇴</span><h3>Norske, lokale tall</h3><p>Kommunale egenandelssatser og regionale pleiekostnader, ikke generiske gjennomsnitt.</p></div>
+      <div class="card"><span class="icon">🧾</span><h3>Lettlest familierapport (PDF)</h3><p>Laget for å deles ved kjøkkenbordet — og med rådgiver, søsken eller foreldre.</p></div>
+      <div class="card"><span class="icon">🔒</span><h3>Personvern på norsk</h3><p>Data lagres i Norge/EU, i tråd med GDPR. Vi selger aldri data videre.</p></div>
+      <div class="card"><span class="icon">🔄</span><h3>Årlig oppdatering</h3><p>Helse, formue eller kommunale satser endrer seg. Abonnenter får planen oppdatert automatisk.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOCIAL PROOF ===== -->
+<section class="section" id="historier">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <p class="eyebrow">Sosialt bevis</p>
+      <h2>Familier som endelig fikk oversikt</h2>
+    </div>
+    <div class="grid-3" style="margin-top:36px">
+      <div class="quote-card">
+        <blockquote>«Vi hadde utsatt hele samtalen i årevis. Aktuarium gjorde det til et regnestykke i stedet for en krangel. Vi delte rapporten med begge søsknene mine samme kveld.»</blockquote>
+        <div class="person">
+          <div class="avatar">KN</div>
+          <div class="meta"><strong>Kari Nordahl, 59</strong><span>Datter og pårørende, Trondheim</span></div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <blockquote>«Som honorarbasert rådgiver lever jeg av å være objektiv. Aktuarium-rapporten er beviset jeg legger på bordet — kunden ser at jeg ikke har noen agenda.»</blockquote>
+        <div class="person">
+          <div class="avatar">AH</div>
+          <div class="meta"><strong>Anders Holt, 47</strong><span>Uavhengig finansrådgiver, Oslo</span></div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <blockquote>«Jeg trodde pappas pensjon dekket sykehjemmet. Egenandelen tok nesten alt. Skulle ønske vi hadde regnet på dette to år tidligere.»</blockquote>
+        <div class="person">
+          <div class="avatar">MB</div>
+          <div class="meta"><strong>Mona Berg, 54</strong><span>Pårørende, Stavanger</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="proof-extra">
+      <div class="proof-pill">📊 Familien Eide oppdaget et gap på 1,1 mill. — og justerte planen før, ikke etter, en diagnose.</div>
+      <div class="proof-pill">🤝 7 av 10 brukere deler rapporten med familie eller rådgiver innen en uke.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="section" id="priser" style="background:var(--grey-strip); border-top:1px solid var(--line); border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <p class="eyebrow">Priser</p>
+      <h2>Betal én gang, eller hold planen oppdatert. Aldri provisjon.</h2>
+    </div>
+    <div class="pricing-grid" style="margin-top:40px">
+      <div class="price-card">
+        <h3>Engangsrapport</h3>
+        <div class="price">499 kr <small>engangs</small></div>
+        <ul>
+          <li>Komplett sammenligning</li>
+          <li>Lettlest PDF-rapport</li>
+          <li>Kildehenvisninger inkludert</li>
+        </ul>
+        <a href="#start" class="btn btn--block">Kjøp rapport</a>
+        <p class="price-best">Best for: deg som vil ha klarhet nå</p>
+      </div>
+      <div class="price-card price-card--featured">
+        <span class="ribbon">⭐ MEST POPULÆR</span>
+        <h3>Familieabonnement</h3>
+        <div class="price">199 kr <small>/ mnd</small></div>
+        <ul>
+          <li>Alt i engangsrapporten</li>
+          <li>Årlige oppdateringer ved endring i helse, formue eller satser</li>
+          <li>Ingen binding — si opp når som helst</li>
+        </ul>
+        <a href="#start" class="btn btn--block">Start abonnement</a>
+        <p class="price-best">Best for: familier midt i en beslutning</p>
+      </div>
+      <div class="price-card">
+        <h3>For rådgivere (white-label)</h3>
+        <div class="price">Fra 12 000 kr <small>/ år</small></div>
+        <ul>
+          <li>Din logo på rapportene</li>
+          <li>Ubegrenset bruk til klienter</li>
+          <li>Nøytralt grunnlag for kundesamtalen</li>
+        </ul>
+        <a href="#radgivere" class="btn btn--block">Book demo</a>
+        <p class="price-best">Best for: uavhengige finansrådgivere, formuesforvaltere, arveadvokater</p>
+      </div>
+    </div>
+    <p class="price-note">Alle priser inkl. mva. Ingen binding på abonnement — si opp når som helst.</p>
+  </div>
+</section>
+
+<!-- ===== ADVISOR BAND ===== -->
+<section class="section advisor" id="radgivere">
+  <div class="wrap" style="max-width:820px; text-align:center">
+    <p class="eyebrow">For rådgivere</p>
+    <h2>Selger du objektivitet? Gi kundene beviset.</h2>
+    <p style="margin-left:auto;margin-right:auto">Honorarbaserte rådgivere, formuesforvaltere og arveadvokater bruker Aktuarium-rapporten som det nøytrale grunnlaget for samtalen om pleie og arv. Din logo, våre tall, null provisjonsmistanke.</p>
+    <a href="#start" class="btn btn--gold btn--lg" style="margin-top:14px">Se white-label-løsningen</a>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <p class="eyebrow">FAQ</p>
+      <h2>Spørsmål familier stiller oss</h2>
+    </div>
+    <div class="faq-list" style="margin-top:36px">
+      <details class="faq">
+        <summary>Selger dere forsikring eller tar provisjon?</summary>
+        <div class="answer">Nei. Vi tjener kun på det du betaler for rapporten eller abonnementet. Vi har ingen avtaler med forsikringsselskap, banker eller pleieaktører. Det er hele poenget.</div>
+      </details>
+      <details class="faq">
+        <summary>Er dette finansiell rådgivning?</summary>
+        <div class="answer">Nei. Aktuarium er et beslutningsverktøy som viser deg tallene basert på offentlige data og dine opplysninger. For konkrete råd anbefaler vi at du tar rapporten med til en uavhengig, honorarbasert rådgiver — den er laget for nettopp det.</div>
+      </details>
+      <details class="faq">
+        <summary>Hvor kommer tallene fra?</summary>
+        <div class="answer">Fra offentlige kilder: SSB, Helsedirektoratet, kommunale egenandelssatser og anerkjente aktuartabeller. Vi viser kildene i rapporten, slik at du kan etterprøve dem.</div>
+      </details>
+      <details class="faq">
+        <summary>Hva skjer med personopplysningene mine?</summary>
+        <div class="answer">De lagres trygt i Norge/EU i tråd med GDPR, brukes kun til å lage din rapport, og selges aldri videre. Du kan be om sletting når som helst.</div>
+      </details>
+      <details class="faq">
+        <summary>Hva om jeg ikke vet de eksakte tallene for formue eller helse?</summary>
+        <div class="answer">Det går helt fint — du kan bruke anslag, og verktøyet viser hvordan resultatet endrer seg. Du kan oppdatere når du vet mer.</div>
+      </details>
+      <details class="faq">
+        <summary>Er dette bare for rike?</summary>
+        <div class="answer">Nei. Jo mindre buffer en familie har, jo viktigere er det å vite hva egenandeler og ventetid faktisk koster. Verktøyet er nyttig på alle formuesnivåer.</div>
+      </details>
+      <details class="faq">
+        <summary>Kan jeg bruke dette for foreldrene mine, ikke meg selv?</summary>
+        <div class="answer">Ja. Mange av brukerne våre er voksne barn som planlegger på vegne av aldrende foreldre. Rapporten er laget for å deles mellom generasjoner.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="section final" id="start">
+  <div class="wrap" style="max-width:760px">
+    <h2>De beste pleiebeslutningene tas i ro — ikke etter et fall.
+      <span class="sub-h">Få oversikten mens dere fortsatt kan velge.</span>
+    </h2>
+    <p>4 minutter. Ingen kortinformasjon for å se det første resultatet. Ingen selger ringer deg.</p>
+    <div class="final-cta-row">
+      <a href="#" class="btn btn--gold btn--lg">Regn ut min families situasjon — gratis</a>
+      <a href="#losning" style="color:rgba(255,255,255,.9); font-weight:600; text-decoration:underline">Eller last ned eksempelrapporten først →</a>
+    </div>
+    <div class="guarantee">
+      💯 <strong>14 dagers full pengene-tilbake-garanti</strong> på rapport og abonnement. Er du ikke tryggere på valget, får du pengene tilbake — uten spørsmål.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" style="font-size:1.4rem">Aktu<span style="color:var(--gold)">arium</span></a>
+        <p style="margin-top:12px; max-width:36ch">Den uavhengige kalkulatoren for familier som står foran valg om pleie og omsorg på eldre dager.</p>
+        <p style="font-size:0.85rem; color:rgba(255,255,255,.5)">Aktuarium AS · Org.nr. 000 000 000 · kontakt@aktuarium.no</p>
+      </div>
+      <div>
+        <h4>Produkt</h4>
+        <ul class="foot-links">
+          <li><a href="#slik">Slik funker det</a></li>
+          <li><a href="#priser">Priser</a></li>
+          <li><a href="#radgivere">For rådgivere</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Blogg / Ressurser</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Selskap & vilkår</h4>
+        <ul class="foot-links">
+          <li><a href="#">Personvernerklæring</a></li>
+          <li><a href="#">Vilkår</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Tilgjengelighetserklæring</a></li>
+        </ul>
+        <p style="margin-top:14px"><a href="#">Facebook</a> · <a href="#">LinkedIn</a> · <a href="#">YouTube</a></p>
+      </div>
+    </div>
+    <p class="foot-legal">Aktuarium gir beslutningsstøtte basert på offentlige data og leverer ikke individuell finansiell rådgivning i henhold til finansforetaksloven. Tallene er anslag og kan avvike fra faktiske kostnader.</p>
+  </div>
+</footer>
+
+</body>
+</html>
