@@ -41,7 +41,7 @@
   label.field{display:block;margin-bottom:20px}
   label.field .lbl{display:block;font-weight:600;margin-bottom:8px}
   label.field .hint{display:block;font-weight:400;color:var(--muted);font-size:.9rem;margin-bottom:8px}
-  input[type=number],select{width:100%;font-size:1.05rem;padding:13px 14px;border:1px solid var(--line);
+  input[type=number],input[type=email],input[type=text],select{width:100%;font-size:1.05rem;padding:13px 14px;border:1px solid var(--line);
     border-radius:10px;background:var(--offwhite);color:var(--ink)}
   input:focus,select:focus{outline:3px solid rgba(14,92,91,.25);border-color:var(--green)}
 
@@ -217,9 +217,17 @@
       </details>
 
       <div class="gate">
-        <p style="font-weight:700;margin-bottom:6px">Vil du ha hele regnestykket?</p>
-        <p style="color:var(--muted);font-size:.95rem;margin-top:0">Få den komplette PDF-rapporten med kilder, årlige tall og delbar oversikt for familien.</p>
-        <a href="bestill.html?type=rapport" class="btn btn--gold btn--block">Lås opp full rapport — 499 kr</a>
+        <p style="font-weight:700;margin-bottom:6px">Få hele rapporten som PDF på e-post</p>
+        <p style="color:var(--muted);font-size:.95rem;margin-top:0">Komplett rapport med dine tall, kilder og forutsetninger — klar til å dele med familien eller en rådgiver. <strong>Gratis i pilotfasen.</strong></p>
+        <label class="field" style="margin-bottom:12px">
+          <input type="text" id="r-navn" placeholder="Navn (valgfritt)" autocomplete="name" />
+        </label>
+        <label class="field" style="margin-bottom:12px">
+          <input type="email" id="r-epost" placeholder="din@epost.no" autocomplete="email" required />
+        </label>
+        <button type="button" class="btn btn--gold btn--block" id="send-report">Send meg rapporten</button>
+        <p id="report-status" style="margin-top:12px;font-size:.95rem;display:none"></p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:12px">Ingen kortinfo. Vi bruker e-posten din kun til å sende rapporten, i tråd med GDPR.</p>
       </div>
     </section>
 
@@ -235,6 +243,13 @@
 
 <script>
 (function(){
+  // ── KONFIG ──────────────────────────────────────────────
+  // Tom = samme origin (hvis siden hostes på Vercel). Hvis siden ligger på
+  // GitHub Pages og backend på Vercel: sett til ditt Vercel-domene,
+  // f.eks. "https://aktuarium.vercel.app"
+  var API_BASE = "";
+  // ────────────────────────────────────────────────────────
+
   var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
   var segs  = Array.prototype.slice.call(document.querySelectorAll('.progress .seg'));
   var prevBtn = document.getElementById('prev');
@@ -286,6 +301,18 @@
   }
   function fmtMill(n){
     return (n/1e6).toLocaleString('nb-NO',{maximumFractionDigits:1}) + ' mill.';
+  }
+
+  function collectInput(){
+    return {
+      alder:   document.getElementById('alder').value,
+      helse:   (document.querySelector('input[name=helse]:checked')||{}).value || 'middels',
+      formue:  document.getElementById('formue').value,
+      bolig:   document.getElementById('bolig').value,
+      inntekt: document.getElementById('inntekt').value,
+      region:  document.getElementById('region').value,
+      hjemme:  document.getElementById('hjemme').value
+    };
   }
 
   function compute(){
@@ -365,6 +392,51 @@
     }
   });
   prevBtn.addEventListener('click', function(){ if(cur>0) showStep(cur-1); });
+
+  // ── Send rapport på e-post ──────────────────────────────
+  var sendBtn = document.getElementById('send-report');
+  var statusEl = document.getElementById('report-status');
+  function showStatus(msg, isErr){
+    statusEl.style.display = 'block';
+    statusEl.textContent = msg;
+    statusEl.style.color = isErr ? '#9b2c2c' : 'var(--green)';
+  }
+  if(sendBtn){
+    sendBtn.addEventListener('click', function(){
+      var epost = (document.getElementById('r-epost').value || '').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(epost)){
+        showStatus('Skriv inn en gyldig e-postadresse.', true); return;
+      }
+      var payload = collectInput();
+      payload.navn = (document.getElementById('r-navn').value || '').trim();
+      payload.epost = epost;
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sender …';
+      statusEl.style.display = 'none';
+
+      fetch(API_BASE + '/api/generate-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        return res.json().catch(function(){ return {}; }).then(function(j){ return { ok: res.ok, j: j }; });
+      }).then(function(r){
+        if(r.ok){
+          sendBtn.textContent = 'Sendt ✓';
+          showStatus('✓ Rapporten er sendt til ' + epost + '. Sjekk innboksen (og evt. søppelpost).', false);
+        } else {
+          fail(r.j && r.j.error);
+        }
+      }).catch(function(){ fail(); });
+
+      function fail(msg){
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send meg rapporten';
+        showStatus(msg || 'Noe gikk galt. Prøv igjen om litt, eller kontakt oss på kontakt@aktuarium.no.', true);
+      }
+    });
+  }
 
   showStep(0);
 })();

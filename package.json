@@ -1,0 +1,14 @@
+{
+  "name": "aktuarium",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Aktuarium — landingsside, kalkulator og rapport-backend",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pdfkit": "^0.15.0",
+    "resend": "^4.0.1"
+  }
+}
