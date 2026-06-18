@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aktuarium — Kom i gang</title>
+<meta name="description" content="Sett deg på listen for Aktuarium-rapporten, familieabonnementet eller book en demo for rådgivere." />
+<meta name="robots" content="noindex" />
+<style>
+  :root{
+    --green:#0E5C5B; --green-dark:#0A4544; --offwhite:#FAF7F2; --ink:#1C2B2A;
+    --muted:#5A6B69; --line:#E3DDD2; --gold:#C9A227; --white:#fff;
+    --radius:14px; --shadow:0 10px 30px rgba(14,92,91,.12); --shadow-sm:0 4px 14px rgba(14,92,91,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:18px;line-height:1.6;color:var(--ink);background:var(--offwhite);-webkit-font-smoothing:antialiased}
+  a{color:var(--green)}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(250,247,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;max-width:1120px;margin:0 auto;padding:0 20px}
+  .logo{font-weight:800;font-size:1.3rem;color:var(--green);text-decoration:none;letter-spacing:-.02em}
+  .logo span{color:var(--gold)}
+  .nav-back{color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
+  .nav-back:hover{color:var(--green)}
+
+  h1{font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 .3em;line-height:1.15}
+  .eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;font-weight:700;color:var(--green);margin:0 0 8px}
+  .intro{color:var(--muted);margin-bottom:26px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow-sm)}
+
+  .pricetag{display:inline-block;background:#EAF4F2;border:1px solid var(--green);color:var(--green-dark);
+    font-weight:700;border-radius:999px;padding:6px 14px;font-size:.95rem;margin-bottom:18px}
+
+  label.field{display:block;margin-bottom:18px}
+  label.field .lbl{display:block;font-weight:600;margin-bottom:7px}
+  input,textarea{width:100%;font-size:1.05rem;padding:13px 14px;border:1px solid var(--line);
+    border-radius:10px;background:var(--offwhite);color:var(--ink);font-family:inherit}
+  input:focus,textarea:focus{outline:3px solid rgba(14,92,91,.25);border-color:var(--green)}
+  textarea{min-height:90px;resize:vertical}
+  .hidden{display:none !important}
+
+  .btn{display:block;width:100%;background:var(--green);color:#fff;text-decoration:none;font-weight:700;font-size:1.08rem;
+    padding:16px 26px;border-radius:var(--radius);border:none;cursor:pointer;transition:.15s;box-shadow:var(--shadow-sm);text-align:center}
+  .btn:hover{background:var(--green-dark)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .microcopy{font-size:.88rem;color:var(--muted);margin-top:12px;text-align:center}
+  .err{color:#9b2c2c;font-size:.92rem;margin-top:10px;display:none}
+  .err.show{display:block}
+
+  .thanks{display:none;text-align:center;padding:14px 0}
+  .thanks.show{display:block}
+  .thanks .check{width:64px;height:64px;border-radius:50%;background:#EAF4F2;border:2px solid var(--green);
+    color:var(--green);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 18px}
+  .trust-line{font-size:.85rem;color:var(--muted);margin-top:22px;text-align:center;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Aktu<span>arium</span></a>
+    <a href="index.html" class="nav-back">← Tilbake til forsiden</a>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:40px;padding-bottom:60px">
+  <p class="eyebrow" id="eyebrow">Kom i gang</p>
+  <h1 id="title">Sett deg på listen</h1>
+  <p class="intro" id="intro">Legg igjen navn og e-post, så tar vi kontakt.</p>
+
+  <div class="card">
+    <span class="pricetag" id="pricetag"></span>
+
+    <!-- FORM -->
+    <form id="signup" novalidate>
+      <!-- Formspree: bytt ut endepunktet under med ditt eget (https://formspree.io/f/DIN_ID) -->
+      <label class="field">
+        <span class="lbl">Navn</span>
+        <input type="text" id="navn" name="navn" autocomplete="name" placeholder="Ditt navn" required />
+      </label>
+      <label class="field">
+        <span class="lbl">E-post</span>
+        <input type="email" id="epost" name="epost" autocomplete="email" placeholder="deg@example.no" required />
+      </label>
+      <label class="field hidden" id="field-firma">
+        <span class="lbl">Firma</span>
+        <input type="text" id="firma" name="firma" autocomplete="organization" placeholder="Firmanavn" />
+      </label>
+      <label class="field hidden" id="field-telefon">
+        <span class="lbl">Telefon</span>
+        <input type="tel" id="telefon" name="telefon" autocomplete="tel" placeholder="+47 ..." />
+      </label>
+      <label class="field" id="field-melding">
+        <span class="lbl" id="melding-lbl">Melding (valgfritt)</span>
+        <textarea id="melding" name="melding" placeholder="Noe vi bør vite?"></textarea>
+      </label>
+
+      <!-- skjult: hva henvendelsen gjelder + honeypot mot spam -->
+      <input type="hidden" id="interesse" name="interesse" value="" />
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+      <button type="submit" class="btn" id="submit">Send</button>
+      <p class="microcopy">Ingen kortinfo. Vi bruker opplysningene kun til å kontakte deg, i tråd med GDPR.</p>
+      <p class="err" id="err">Noe gikk galt. Prøv igjen, eller send oss en e-post på kontakt@aktuarium.no.</p>
+    </form>
+
+    <!-- THANK YOU -->
+    <div class="thanks" id="thanks">
+      <div class="check">✓</div>
+      <h2 style="margin:0 0 8px" id="thanks-title">Takk!</h2>
+      <p style="color:var(--muted)" id="thanks-text">Vi har registrert deg og tar kontakt så snart som mulig.</p>
+      <a href="index.html" class="btn" style="margin-top:20px;background:var(--gold);color:#1C2B2A">Tilbake til forsiden</a>
+    </div>
+
+    <p class="trust-line">Bygget på offentlige data fra SSB og Helsedirektoratet · Ingen provisjon · Data lagres i Norge/EU</p>
+  </div>
+</main>
+
+<script>
+(function(){
+  // ── KONFIG ──────────────────────────────────────────────
+  // Bytt ut med ditt eget Formspree-endepunkt: https://formspree.io/f/DIN_ID
+  var FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_YOUR_ID";
+  // ────────────────────────────────────────────────────────
+
+  var params = new URLSearchParams(window.location.search);
+  var type = (params.get('type') || 'rapport').toLowerCase();
+
+  var copy = {
+    rapport: {
+      eyebrow: 'Engangsrapport',
+      title: 'Få Aktuarium-rapporten din',
+      intro: 'Vi er i oppstart og åpner i puljer. Legg igjen navn og e-post, så gir vi deg beskjed og sender betalingslenke så snart rapporten din er klar.',
+      pricetag: '499 kr · engangs',
+      melding: 'Kort om situasjonen (valgfritt)',
+      thanks: 'Du står på listen. Vi sender deg en e-post med neste steg og betalingslenke så snart vi åpner.'
+    },
+    abonnement: {
+      eyebrow: 'Familieabonnement',
+      title: 'Start familieabonnementet',
+      intro: 'Vi er i oppstart og åpner i puljer. Legg igjen navn og e-post, så gir vi deg beskjed og sender betalingslenke så snart vi åpner for abonnement.',
+      pricetag: '199 kr / mnd · ingen binding',
+      melding: 'Kort om situasjonen (valgfritt)',
+      thanks: 'Du står på listen. Vi sender deg en e-post med neste steg og betalingslenke så snart vi åpner.'
+    },
+    demo: {
+      eyebrow: 'For rådgivere',
+      title: 'Book en white-label-demo',
+      intro: 'Fortell oss litt om firmaet ditt, så avtaler vi en kort demo av hvordan Aktuarium-rapporten kan bli ditt nøytrale grunnlag i kundesamtalen.',
+      pricetag: 'White-label · fra 12 000 kr / år',
+      melding: 'Hva ønsker du å se i demoen? (valgfritt)',
+      thanks: 'Takk! Vi tar kontakt for å avtale tidspunkt for demoen.'
+    }
+  };
+  if(!copy[type]) type = 'rapport';
+  var c = copy[type];
+
+  document.getElementById('eyebrow').textContent = c.eyebrow;
+  document.getElementById('title').textContent = c.title;
+  document.getElementById('intro').textContent = c.intro;
+  document.getElementById('pricetag').textContent = c.pricetag;
+  document.getElementById('melding-lbl').textContent = c.melding;
+  document.getElementById('interesse').value = c.eyebrow + ' (' + type + ')';
+  document.title = 'Aktuarium — ' + c.title;
+  document.getElementById('thanks-text').textContent = c.thanks;
+
+  // Demo viser firma + telefon
+  if(type === 'demo'){
+    document.getElementById('field-firma').classList.remove('hidden');
+    document.getElementById('field-telefon').classList.remove('hidden');
+    document.getElementById('firma').setAttribute('required','');
+    document.getElementById('submit').textContent = 'Be om demo';
+  } else {
+    document.getElementById('submit').textContent = 'Sett meg på listen';
+  }
+
+  var form = document.getElementById('signup');
+  var errEl = document.getElementById('err');
+  var btn = document.getElementById('submit');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errEl.classList.remove('show');
+
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Sender …';
+
+    var data = new FormData(form);
+
+    // Hvis endepunktet ikke er satt opp ennå: vis takk-state lokalt (ingen reell innsending).
+    if(FORMSPREE_ENDPOINT.indexOf('REPLACE_WITH_YOUR_ID') !== -1){
+      showThanks();
+      return;
+    }
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res){
+      if(res.ok){ showThanks(); }
+      else { fail(); }
+    }).catch(fail);
+  });
+
+  function showThanks(){
+    form.style.display = 'none';
+    document.getElementById('thanks').classList.add('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function fail(){
+    btn.disabled = false;
+    btn.textContent = (type==='demo') ? 'Be om demo' : 'Sett meg på listen';
+    errEl.classList.add('show');
+  }
+})();
+</script>
+</body>
+</html>
