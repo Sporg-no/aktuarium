@@ -1,0 +1,41 @@
+name: Deploy landingsside til GitHub Pages
+
+on:
+  push:
+    branches:
+      - claude/intelligent-pasteur-fbycvf
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Tillat én samtidig deploy; avbryt ikke pågående produksjonskjøring.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hent kode
+        uses: actions/checkout@v4
+
+      - name: Sett opp Pages (slår på Pages automatisk)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Last opp statisk nettsted
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy til GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

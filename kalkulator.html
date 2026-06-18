@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aktuarium — Regn ut hva eldreomsorg koster familien din</title>
+<meta name="description" content="Svar på fire enkle steg og se et illustrativt anslag på hva egenfinansiering, offentlig tilbud med egenandel og privat pleie koster familien din over 20 år." />
+<style>
+  :root {
+    --green:#0E5C5B; --green-dark:#0A4544; --offwhite:#FAF7F2; --ink:#1C2B2A;
+    --muted:#5A6B69; --line:#E3DDD2; --gold:#C9A227; --white:#fff;
+    --radius:14px; --shadow:0 10px 30px rgba(14,92,91,.12); --shadow-sm:0 4px 14px rgba(14,92,91,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:18px;line-height:1.6;color:var(--ink);background:var(--offwhite);-webkit-font-smoothing:antialiased}
+  a{color:var(--green)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(250,247,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;max-width:1120px;margin:0 auto;padding:0 20px}
+  .logo{font-weight:800;font-size:1.3rem;color:var(--green);text-decoration:none;letter-spacing:-.02em}
+  .logo span{color:var(--gold)}
+  .nav-back{color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
+  .nav-back:hover{color:var(--green)}
+
+  h1{font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 .3em;line-height:1.15}
+  .intro{color:var(--muted);margin-bottom:28px}
+
+  /* progress */
+  .progress{display:flex;gap:8px;margin:0 0 30px}
+  .progress .seg{flex:1;height:8px;border-radius:6px;background:var(--line)}
+  .progress .seg.active{background:var(--green)}
+  .progress .seg.done{background:var(--gold)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow-sm)}
+  .step{display:none}
+  .step.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .step-eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;font-weight:700;color:var(--green);margin:0 0 6px}
+  .step h2{font-size:1.4rem;margin:0 0 18px}
+  label.field{display:block;margin-bottom:20px}
+  label.field .lbl{display:block;font-weight:600;margin-bottom:8px}
+  label.field .hint{display:block;font-weight:400;color:var(--muted);font-size:.9rem;margin-bottom:8px}
+  input[type=number],select{width:100%;font-size:1.05rem;padding:13px 14px;border:1px solid var(--line);
+    border-radius:10px;background:var(--offwhite);color:var(--ink)}
+  input:focus,select:focus{outline:3px solid rgba(14,92,91,.25);border-color:var(--green)}
+
+  .choices{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:560px){.choices{grid-template-columns:repeat(3,1fr)}}
+  .choice{border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;background:var(--offwhite);text-align:center;transition:.15s}
+  .choice input{position:absolute;opacity:0}
+  .choice:hover{border-color:var(--green)}
+  .choice.sel{border-color:var(--green);background:#EAF4F2;box-shadow:inset 0 0 0 1px var(--green)}
+  .choice .c-title{font-weight:700;display:block}
+  .choice .c-sub{font-size:.82rem;color:var(--muted)}
+
+  .nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+  .btn{display:inline-block;background:var(--green);color:#fff;text-decoration:none;font-weight:700;font-size:1.05rem;
+    padding:14px 26px;border-radius:var(--radius);border:none;cursor:pointer;transition:.15s;box-shadow:var(--shadow-sm)}
+  .btn:hover{background:var(--green-dark)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn--ghost{background:transparent;color:var(--green);border:2px solid var(--line);box-shadow:none}
+  .btn--ghost:hover{background:#fff;border-color:var(--green)}
+  .btn--gold{background:var(--gold);color:#1C2B2A}
+  .btn--gold:hover{background:#b8911f}
+  .btn--block{display:block;width:100%}
+
+  /* result */
+  .matrix{display:grid;grid-template-columns:1fr;gap:12px;margin:22px 0}
+  @media(min-width:620px){.matrix{grid-template-columns:repeat(3,1fr)}}
+  .col{background:var(--offwhite);border:1px solid var(--line);border-radius:12px;padding:18px 14px;text-align:center}
+  .col.best{background:#EAF4F2;border-color:var(--green)}
+  .col .tag{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);min-height:2.4em;display:block}
+  .col .bar-track{height:8px;background:var(--line);border-radius:6px;margin:12px 0 8px;overflow:hidden}
+  .col .bar{height:100%;background:var(--green);border-radius:6px;width:0;transition:width .8s ease}
+  .col .amount{font-size:1.5rem;font-weight:800;color:var(--green)}
+  .col .amount-lbl{font-size:.78rem;color:var(--muted)}
+  .col .cost{font-size:.85rem;color:var(--muted);margin-top:8px}
+  .badge-best{display:inline-block;background:var(--gold);color:#1C2B2A;font-weight:800;font-size:.7rem;
+    padding:3px 9px;border-radius:999px;margin-bottom:8px}
+  .result-summary{background:#EAF4F2;border:1px solid var(--green);border-radius:12px;padding:18px;margin:20px 0;font-weight:600}
+  .assumptions{font-size:.85rem;color:var(--muted);background:var(--offwhite);border:1px dashed var(--line);
+    border-radius:10px;padding:16px;margin-top:18px}
+  .assumptions summary{cursor:pointer;font-weight:700;color:var(--ink)}
+  .assumptions ul{margin:10px 0 0;padding-left:20px}
+  .gate{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+  .disclaimer{font-size:.8rem;color:var(--muted);margin-top:24px}
+  .err{color:#9b2c2c;font-size:.9rem;margin-top:-12px;margin-bottom:14px;display:none}
+  .err.show{display:block}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Aktu<span>arium</span></a>
+    <a href="index.html" class="nav-back">← Tilbake til forsiden</a>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:40px;padding-bottom:60px">
+  <h1>Regn ut hva eldreomsorg koster familien din</h1>
+  <p class="intro">Fire enkle steg. Ingen kortinfo. Du får et illustrativt anslag på hva hver vei koster — og hva som er igjen til familien etter 20 år.</p>
+
+  <div class="progress" aria-hidden="true">
+    <div class="seg active" data-seg="0"></div>
+    <div class="seg" data-seg="1"></div>
+    <div class="seg" data-seg="2"></div>
+    <div class="seg" data-seg="3"></div>
+  </div>
+
+  <form id="calc" class="card" novalidate>
+
+    <!-- STEP 1 -->
+    <section class="step active" data-step="0">
+      <p class="step-eyebrow">Steg 1 av 4</p>
+      <h2>Alder og helse</h2>
+      <label class="field">
+        <span class="lbl">Hvor gammel er personen pleien gjelder?</span>
+        <span class="hint">Deg selv, eller en forelder du planlegger for.</span>
+        <input type="number" id="alder" min="40" max="100" placeholder="f.eks. 58" />
+      </label>
+      <p class="err" id="err-alder">Fyll inn en alder mellom 40 og 100.</p>
+      <span class="lbl">Hvordan vil du beskrive helsen i dag?</span>
+      <span class="hint">Påvirker hvor mange år med pleie vi regner med.</span>
+      <div class="choices" data-group="helse">
+        <label class="choice"><input type="radio" name="helse" value="god"><span class="c-title">God</span><span class="c-sub">~3 år pleie</span></label>
+        <label class="choice"><input type="radio" name="helse" value="middels"><span class="c-title">Middels</span><span class="c-sub">~5 år pleie</span></label>
+        <label class="choice"><input type="radio" name="helse" value="svekket"><span class="c-title">Svekket</span><span class="c-sub">~8 år pleie</span></label>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" data-step="1">
+      <p class="step-eyebrow">Steg 2 av 4</p>
+      <h2>Økonomi</h2>
+      <label class="field">
+        <span class="lbl">Oppsparte midler / formue (utenom bolig)</span>
+        <span class="hint">Bankinnskudd, fond, aksjer. Anslag er helt greit.</span>
+        <input type="number" id="formue" min="0" step="10000" placeholder="f.eks. 1 500 000" />
+      </label>
+      <label class="field">
+        <span class="lbl">Anslått verdi på bolig</span>
+        <span class="hint">Sett 0 hvis personen leier.</span>
+        <input type="number" id="bolig" min="0" step="50000" placeholder="f.eks. 4 000 000" />
+      </label>
+      <label class="field">
+        <span class="lbl">Samlet årlig inntekt / pensjon</span>
+        <span class="hint">Brukes til å anslå egenandel på sykehjem.</span>
+        <input type="number" id="inntekt" min="0" step="10000" placeholder="f.eks. 420 000" />
+      </label>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" data-step="2">
+      <p class="step-eyebrow">Steg 3 av 4</p>
+      <h2>Bosted</h2>
+      <label class="field">
+        <span class="lbl">Hvor bor personen?</span>
+        <span class="hint">Pleiekostnader og egenandeler varierer mellom regioner.</span>
+        <select id="region">
+          <option value="1.05">Oslo og store byer (høyere kostnad)</option>
+          <option value="1.0" selected>Mellomstor kommune (gjennomsnitt)</option>
+          <option value="0.92">Mindre kommune / distrikt (lavere kostnad)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="lbl">Hvor viktig er det å bo hjemme lengst mulig?</span>
+        <select id="hjemme">
+          <option value="hjemme">Svært viktig — ønsker pleie hjemme</option>
+          <option value="blandet" selected>Litt viktig — åpen for begge deler</option>
+          <option value="institusjon">Mindre viktig — institusjon er greit</option>
+        </select>
+      </label>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step" data-step="3">
+      <p class="step-eyebrow">Steg 4 av 4</p>
+      <h2>Resultat</h2>
+      <p>Basert på svarene dine, her er et <strong>illustrativt anslag</strong> over 20 år. Tallene er forenklet og erstatter ikke en full rapport eller rådgivning.</p>
+
+      <div class="result-summary" id="summary"></div>
+
+      <div class="matrix">
+        <div class="col" data-col="egen">
+          <span class="tag">Egenfinansiering<br>(pleie hjemme)</span>
+          <div class="bar-track"><div class="bar"></div></div>
+          <div class="amount">—</div>
+          <div class="amount-lbl">igjen til familien</div>
+          <div class="cost"></div>
+        </div>
+        <div class="col" data-col="offentlig">
+          <span class="tag">Offentlig + egenandel</span>
+          <div class="bar-track"><div class="bar"></div></div>
+          <div class="amount">—</div>
+          <div class="amount-lbl">igjen til familien</div>
+          <div class="cost"></div>
+        </div>
+        <div class="col" data-col="privat">
+          <span class="tag">Privat pleie</span>
+          <div class="bar-track"><div class="bar"></div></div>
+          <div class="amount">—</div>
+          <div class="amount-lbl">igjen til familien</div>
+          <div class="cost"></div>
+        </div>
+      </div>
+
+      <details class="assumptions">
+        <summary>Hvilke forutsetninger ligger bak?</summary>
+        <ul>
+          <li>Pleieårene avhenger av oppgitt helse (god ≈ 3 år, middels ≈ 5 år, svekket ≈ 8 år).</li>
+          <li>Privat pleie regnes til ca. 75 000 kr/mnd, egenfinansiert hjemmepleie til ca. 50 000 kr/mnd.</li>
+          <li>Egenandel på offentlig sykehjem anslås til inntil 85 % av inntekt over et fribeløp.</li>
+          <li>Kostnader justeres for region og ca. 3 % årlig prisvekst.</li>
+          <li>«Igjen til familien» = formue + bolig minus samlede pleiekostnader (gulv på 0 kr).</li>
+        </ul>
+      </details>
+
+      <div class="gate">
+        <p style="font-weight:700;margin-bottom:6px">Vil du ha hele regnestykket?</p>
+        <p style="color:var(--muted);font-size:.95rem;margin-top:0">Få den komplette PDF-rapporten med kilder, årlige tall og delbar oversikt for familien.</p>
+        <a href="index.html#priser" class="btn btn--gold btn--block">Lås opp full rapport — 499 kr</a>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <div class="nav-btns">
+      <button type="button" class="btn btn--ghost" id="prev" disabled>← Tilbake</button>
+      <button type="button" class="btn" id="next">Neste →</button>
+    </div>
+  </form>
+
+  <p class="disclaimer">Illustrativt anslag basert på offentlige gjennomsnittstall og dine opplysninger. Aktuarium leverer ikke individuell finansiell rådgivning i henhold til finansforetaksloven. Tallene kan avvike fra faktiske kostnader.</p>
+</main>
+
+<script>
+(function(){
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var segs  = Array.prototype.slice.call(document.querySelectorAll('.progress .seg'));
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+  var cur = 0;
+
+  // choice selection styling
+  document.querySelectorAll('.choice input').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var group = inp.closest('.choices');
+      group.querySelectorAll('.choice').forEach(function(c){ c.classList.remove('sel'); });
+      inp.closest('.choice').classList.add('sel');
+    });
+  });
+
+  function showStep(i){
+    steps.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+    segs.forEach(function(s,idx){
+      s.classList.toggle('active', idx===i);
+      s.classList.toggle('done', idx<i);
+    });
+    prevBtn.disabled = (i===0);
+    nextBtn.textContent = (i===steps.length-2) ? 'Se resultatet →' : (i===steps.length-1 ? 'Ferdig' : 'Neste →');
+    nextBtn.style.display = (i===steps.length-1) ? 'none' : 'inline-block';
+    cur = i;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function validate(i){
+    if(i===0){
+      var a = parseInt(document.getElementById('alder').value,10);
+      var helse = document.querySelector('input[name=helse]:checked');
+      var err = document.getElementById('err-alder');
+      if(isNaN(a) || a<40 || a>100){ err.classList.add('show'); return false; }
+      err.classList.remove('show');
+      if(!helse){ alert('Velg helsestatus for å gå videre.'); return false; }
+    }
+    if(i===1){
+      var f = document.getElementById('formue').value;
+      var inn = document.getElementById('inntekt').value;
+      if(f==='' || inn===''){ alert('Fyll inn formue og inntekt (anslag er greit).'); return false; }
+    }
+    return true;
+  }
+
+  function fmt(n){
+    n = Math.max(0, Math.round(n));
+    return n.toLocaleString('nb-NO') + ' kr';
+  }
+  function fmtMill(n){
+    return (n/1e6).toLocaleString('nb-NO',{maximumFractionDigits:1}) + ' mill.';
+  }
+
+  function compute(){
+    var alder  = parseInt(document.getElementById('alder').value,10)||60;
+    var helse  = (document.querySelector('input[name=helse]:checked')||{}).value || 'middels';
+    var formue = parseFloat(document.getElementById('formue').value)||0;
+    var bolig  = parseFloat(document.getElementById('bolig').value)||0;
+    var inntekt= parseFloat(document.getElementById('inntekt').value)||0;
+    var region = parseFloat(document.getElementById('region').value)||1;
+    var hjemme = document.getElementById('hjemme').value;
+
+    var careYears = helse==='god'?3 : helse==='svekket'?8 : 5;
+    var infl = 1.03;
+    // average inflation multiplier across the care window (mid-point compounding)
+    var inflFactor = Math.pow(infl, careYears/2 + 5); // care assumed to start ~5 yrs out
+    var assets = formue + bolig;
+
+    // annual costs (kr/yr), region-adjusted
+    var privatYr = 75000*12*region;            // premium private nursing home
+    var egenYr   = 50000*12*region;            // self-funded home care
+    if(hjemme==='hjemme') egenYr *= 1.1;        // wanting to stay home costs a bit more
+    var fribelop = 110000;                      // approx income shielded from egenandel
+    var egenandelYr = Math.min(0.85*Math.max(inntekt - fribelop,0), 430000);
+
+    var costPrivat = privatYr * careYears * inflFactor;
+    var costEgen   = egenYr   * careYears * inflFactor;
+    var costOff    = egenandelYr * careYears * inflFactor;
+
+    return {
+      careYears: careYears,
+      egen:      { remaining: Math.max(0, assets-costEgen),   cost: costEgen },
+      offentlig: { remaining: Math.max(0, assets-costOff),    cost: costOff },
+      privat:    { remaining: Math.max(0, assets-costPrivat), cost: costPrivat },
+      assets: assets
+    };
+  }
+
+  function render(){
+    var r = compute();
+    var cols = { egen:r.egen, offentlig:r.offentlig, privat:r.privat };
+    var maxRem = Math.max(r.egen.remaining, r.offentlig.remaining, r.privat.remaining, 1);
+    var bestKey = Object.keys(cols).reduce(function(a,b){ return cols[a].remaining>=cols[b].remaining?a:b; });
+    var bestLabel = {egen:'Egenfinansiering (hjemme)', offentlig:'Offentlig + egenandel', privat:'Privat pleie'}[bestKey];
+
+    Object.keys(cols).forEach(function(key){
+      var el = document.querySelector('.col[data-col="'+key+'"]');
+      var data = cols[key];
+      el.querySelector('.amount').textContent = fmtMill(data.remaining);
+      el.querySelector('.cost').textContent = 'Pleiekostnad: ' + fmt(data.cost);
+      el.classList.toggle('best', key===bestKey);
+      // reset & animate bar
+      var bar = el.querySelector('.bar');
+      bar.style.width = '0';
+      setTimeout(function(){ bar.style.width = Math.round(data.remaining/maxRem*100)+'%'; }, 60);
+      // best badge
+      var existing = el.querySelector('.badge-best');
+      if(existing) existing.remove();
+      if(key===bestKey){
+        var b = document.createElement('span');
+        b.className='badge-best'; b.textContent='MEST IGJEN';
+        el.insertBefore(b, el.firstChild);
+      }
+    });
+
+    var diff = maxRem - Math.min(r.egen.remaining, r.offentlig.remaining, r.privat.remaining);
+    document.getElementById('summary').innerHTML =
+      'Med ' + r.careYears + ' år pleie er forskjellen mellom beste og dårligste vei <strong>' +
+      fmt(diff) + '</strong> for familien din. Beste vei i dette anslaget: <strong>' + bestLabel + '</strong>.';
+  }
+
+  nextBtn.addEventListener('click', function(){
+    if(!validate(cur)) return;
+    if(cur < steps.length-1){
+      var goingToResult = (cur === steps.length-2);
+      showStep(cur+1);
+      if(goingToResult) render();
+    }
+  });
+  prevBtn.addEventListener('click', function(){ if(cur>0) showStep(cur-1); });
+
+  showStep(0);
+})();
+</script>
+</body>
+</html>

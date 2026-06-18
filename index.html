@@ -9,6 +9,7 @@
 <meta property="og:description" content="Uavhengig kalkulator som sammenligner egenfinansiering, offentlig tilbud med egenandel og privat pleie. Ingen provisjon." />
 <meta property="og:locale" content="nb_NO" />
 <meta property="og:type" content="website" />
+<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3FInrOHESTPmk3vM3KToAq9TBNI/hf_20260618_115444_78972a6f-428c-4d26-b1fb-063195fbd4d3.png" />
 <style>
   :root {
     --green: #0E5C5B;
@@ -206,7 +207,8 @@
   .quote-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-sm); }
   .quote-card blockquote { margin: 0 0 18px; font-size: 1.05rem; }
   .person { display: flex; align-items: center; gap: 12px; }
-  .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; object-fit: cover; overflow: hidden; flex-shrink: 0; }
+  .solution-photo { width: 100%; max-width: 760px; border-radius: 18px; box-shadow: var(--shadow); margin: 8px auto 28px; display: block; border: 1px solid var(--line); }
   .person .meta { font-size: 0.9rem; }
   .person .meta strong { display: block; }
   .person .meta span { color: var(--muted); }
@@ -302,7 +304,7 @@
       <a href="#slik">Slik funker det</a>
       <a href="#priser">Priser</a>
       <a href="#faq">FAQ</a>
-      <a href="#start" class="btn nav-cta">Start gratis →</a>
+      <a href="kalkulator.html" class="btn nav-cta">Start gratis →</a>
     </nav>
   </div>
 </header>
@@ -318,7 +320,7 @@
       </h1>
       <p class="lede">Aktuarium er den uavhengige kalkulatoren som regner ut hva eldreomsorg faktisk vil koste familien din — offentlig plass, hjemmetjenester eller privat pleie. Vi selger ingen forsikring og tar ingen provisjon. Bare tallene.</p>
       <div class="hero-cta-row">
-        <a href="#start" class="btn btn--lg">Regn ut min families situasjon — gratis</a>
+        <a href="kalkulator.html" class="btn btn--lg">Regn ut min families situasjon — gratis</a>
         <a href="#losning" class="textlink">Se et eksempel på rapporten →</a>
       </div>
       <p class="microcopy">Tar 4 minutter. Ingen kortinfo. Ingen selger ringer.</p>
@@ -456,8 +458,11 @@
         <p>Beslutninger tatt i ro er bedre enn beslutninger tatt etter et fall eller en diagnose.</p>
       </div>
     </div>
-    <div style="text-align:center; margin-top:34px">
-      <a href="#start" class="btn">Se eksempelrapport (PDF)</a>
+    <img class="solution-photo" loading="lazy"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_3FInrOHESTPmk3vM3KToAq9TBNI/hf_20260618_115444_78972a6f-428c-4d26-b1fb-063195fbd4d3_min.webp"
+         alt="Voksen datter og hennes eldre mor ser på Aktuarium-rapporten sammen ved kjøkkenbordet" />
+    <div style="text-align:center; margin-top:8px">
+      <a href="kalkulator.html" class="btn">Se eksempelrapport (PDF)</a>
     </div>
   </div>
 </section>
@@ -518,21 +523,21 @@
       <div class="quote-card">
         <blockquote>«Vi hadde utsatt hele samtalen i årevis. Aktuarium gjorde det til et regnestykke i stedet for en krangel. Vi delte rapporten med begge søsknene mine samme kveld.»</blockquote>
         <div class="person">
-          <div class="avatar">KN</div>
+          <img class="avatar" loading="lazy" src="https://d8j0ntlcm91z4.cloudfront.net/user_3FInrOHESTPmk3vM3KToAq9TBNI/hf_20260618_115450_8bd7efa7-144e-4ccc-8f63-42df6682ea5a_min.webp" alt="Kari Nordahl" />
           <div class="meta"><strong>Kari Nordahl, 59</strong><span>Datter og pårørende, Trondheim</span></div>
         </div>
       </div>
       <div class="quote-card">
         <blockquote>«Som honorarbasert rådgiver lever jeg av å være objektiv. Aktuarium-rapporten er beviset jeg legger på bordet — kunden ser at jeg ikke har noen agenda.»</blockquote>
         <div class="person">
-          <div class="avatar">AH</div>
+          <img class="avatar" loading="lazy" src="https://d8j0ntlcm91z4.cloudfront.net/user_3FInrOHESTPmk3vM3KToAq9TBNI/hf_20260618_115452_bfb69d8e-8728-474b-95ba-c71cda5eb3c5_min.webp" alt="Anders Holt" />
           <div class="meta"><strong>Anders Holt, 47</strong><span>Uavhengig finansrådgiver, Oslo</span></div>
         </div>
       </div>
       <div class="quote-card">
         <blockquote>«Jeg trodde pappas pensjon dekket sykehjemmet. Egenandelen tok nesten alt. Skulle ønske vi hadde regnet på dette to år tidligere.»</blockquote>
         <div class="person">
-          <div class="avatar">MB</div>
+          <img class="avatar" loading="lazy" src="https://d8j0ntlcm91z4.cloudfront.net/user_3FInrOHESTPmk3vM3KToAq9TBNI/hf_20260618_115454_f05823a8-4756-4130-b5e9-eca6f21c7279_min.webp" alt="Mona Berg" />
           <div class="meta"><strong>Mona Berg, 54</strong><span>Pårørende, Stavanger</span></div>
         </div>
       </div>
@@ -649,7 +654,7 @@
     </h2>
     <p>4 minutter. Ingen kortinformasjon for å se det første resultatet. Ingen selger ringer deg.</p>
     <div class="final-cta-row">
-      <a href="#" class="btn btn--gold btn--lg">Regn ut min families situasjon — gratis</a>
+      <a href="kalkulator.html" class="btn btn--gold btn--lg">Regn ut min families situasjon — gratis</a>
       <a href="#losning" style="color:rgba(255,255,255,.9); font-weight:600; text-decoration:underline">Eller last ned eksempelrapporten først →</a>
     </div>
     <div class="guarantee">
