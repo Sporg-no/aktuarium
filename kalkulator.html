@@ -306,8 +306,14 @@
   }
 
   // Konstanter – holdes identisk med lib/model.js (verifiserte 2025/2026-satser)
-  var G = 130160, FRIBELOP = 10450, TIMEPRIS = 600, INST_MND = 75000, INFL = 1.03;
+  var G = 130160, FRIBELOP = 10450, TIMEPRIS = 600, INST_MND = 75000, VEKST = 0.03, START_OM = 5;
   var BEHOV_TIMER = { lett:4, middels:12, omfattende:40 };
+
+  function faktorSum(aar, vekst){
+    var s = 0;
+    for (var y = 0; y < aar; y++) s += Math.pow(1+vekst, START_OM + y);
+    return s;
+  }
 
   function collectInput(){
     return {
@@ -334,7 +340,7 @@
     var region = parseFloat(document.getElementById('region').value)||1;
 
     var careYears = helse==='god'?3 : helse==='svekket'?8 : 5;
-    var inflFactor = Math.pow(INFL, careYears/2 + 5);
+    var fSum = faktorSum(careYears, VEKST);
     var assets = formue + bolig;
     var timer = BEHOV_TIMER[behov];
 
@@ -342,11 +348,11 @@
     var privatYr = INST_MND*12*region;                // privat institusjon
     var offentligYr = behov==='omfattende'
       ? egenandelLangtid(inntekt)                     // sykehjem egenandel (av inntekt)
-      : (inntekt < 2*G ? 250*12 : 1500*12);           // praktisk bistand (hjemmesykepleie gratis)
+      : (inntekt < 2*G ? 245*12 : 2500*12);           // praktisk bistand (hjemmesykepleie gratis)
 
-    var costEgen   = egenYr   * careYears * inflFactor;
-    var costPrivat = privatYr * careYears * inflFactor;
-    var costOff    = offentligYr * careYears * inflFactor;
+    var costEgen   = egenYr   * fSum;
+    var costPrivat = privatYr * fSum;
+    var costOff    = offentligYr * fSum;
 
     return {
       careYears: careYears,
