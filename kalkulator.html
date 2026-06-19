@@ -164,11 +164,12 @@
         </select>
       </label>
       <label class="field">
-        <span class="lbl">Hvor viktig er det å bo hjemme lengst mulig?</span>
-        <select id="hjemme">
-          <option value="hjemme">Svært viktig — ønsker pleie hjemme</option>
-          <option value="blandet" selected>Litt viktig — åpen for begge deler</option>
-          <option value="institusjon">Mindre viktig — institusjon er greit</option>
+        <span class="lbl">Hvor omfattende er hjelpebehovet?</span>
+        <span class="hint">Avgjør hvor mye pleie som må kjøpes eller dekkes.</span>
+        <select id="behov">
+          <option value="lett">Lett — litt praktisk hjelp (~4 t/uke)</option>
+          <option value="middels" selected>Middels — daglig hjelp (~12 t/uke)</option>
+          <option value="omfattende">Omfattende — heldøgns pleie / sykehjem</option>
         </select>
       </label>
     </section>
@@ -182,22 +183,22 @@
       <div class="result-summary" id="summary"></div>
 
       <div class="matrix">
-        <div class="col" data-col="egen">
-          <span class="tag">Egenfinansiering<br>(pleie hjemme)</span>
+        <div class="col" data-col="offentlig">
+          <span class="tag">Offentlig (kommunal)<br>med egenandel</span>
           <div class="bar-track"><div class="bar"></div></div>
           <div class="amount">—</div>
           <div class="amount-lbl">igjen til familien</div>
           <div class="cost"></div>
         </div>
-        <div class="col" data-col="offentlig">
-          <span class="tag">Offentlig + egenandel</span>
+        <div class="col" data-col="egen">
+          <span class="tag">Privat hjelp<br>hjemme</span>
           <div class="bar-track"><div class="bar"></div></div>
           <div class="amount">—</div>
           <div class="amount-lbl">igjen til familien</div>
           <div class="cost"></div>
         </div>
         <div class="col" data-col="privat">
-          <span class="tag">Privat pleie</span>
+          <span class="tag">Privat institusjon<br>/ bofellesskap</span>
           <div class="bar-track"><div class="bar"></div></div>
           <div class="amount">—</div>
           <div class="amount-lbl">igjen til familien</div>
@@ -208,11 +209,12 @@
       <details class="assumptions">
         <summary>Hvilke forutsetninger ligger bak?</summary>
         <ul>
+          <li>Medisinsk hjemmesykepleie er gratis i Norge. Egenandel på offentlig sykehjem beregnes av <em>inntekt</em> (75 % inntil 1G, 85 % over 1G — 1G = 130 160 kr), ikke av formue.</li>
           <li>Pleieårene avhenger av oppgitt helse (god ≈ 3 år, middels ≈ 5 år, svekket ≈ 8 år).</li>
-          <li>Privat pleie regnes til ca. 75 000 kr/mnd, egenfinansiert hjemmepleie til ca. 50 000 kr/mnd.</li>
-          <li>Egenandel på offentlig sykehjem anslås til inntil 85 % av inntekt over et fribeløp.</li>
+          <li>Privat hjelp hjemme regnes til ca. 600 kr/t etter behov (4 / 12 / 40 t/uke). Privat institusjon ca. 75 000 kr/mnd (markedsanslag).</li>
           <li>Kostnader justeres for region og ca. 3 % årlig prisvekst.</li>
           <li>«Igjen til familien» = formue + bolig minus samlede pleiekostnader (gulv på 0 kr).</li>
+          <li>Kilder: NAV (grunnbeløp), Lovdata/Helsedirektoratet (egenandelsforskrift 2025), markedsanslag for private tjenester.</li>
         </ul>
       </details>
 
@@ -303,48 +305,53 @@
     return (n/1e6).toLocaleString('nb-NO',{maximumFractionDigits:1}) + ' mill.';
   }
 
+  // Konstanter – holdes identisk med lib/model.js (verifiserte 2025/2026-satser)
+  var G = 130160, FRIBELOP = 10450, TIMEPRIS = 600, INST_MND = 75000, INFL = 1.03;
+  var BEHOV_TIMER = { lett:4, middels:12, omfattende:40 };
+
   function collectInput(){
     return {
       alder:   document.getElementById('alder').value,
       helse:   (document.querySelector('input[name=helse]:checked')||{}).value || 'middels',
+      behov:   document.getElementById('behov').value,
       formue:  document.getElementById('formue').value,
       bolig:   document.getElementById('bolig').value,
       inntekt: document.getElementById('inntekt').value,
-      region:  document.getElementById('region').value,
-      hjemme:  document.getElementById('hjemme').value
+      region:  document.getElementById('region').value
     };
   }
 
+  function egenandelLangtid(inntekt){
+    return 0.75*Math.max(Math.min(inntekt,G)-FRIBELOP,0) + 0.85*Math.max(inntekt-G,0);
+  }
+
   function compute(){
-    var alder  = parseInt(document.getElementById('alder').value,10)||60;
     var helse  = (document.querySelector('input[name=helse]:checked')||{}).value || 'middels';
+    var behov  = BEHOV_TIMER[document.getElementById('behov').value] ? document.getElementById('behov').value : 'middels';
     var formue = parseFloat(document.getElementById('formue').value)||0;
     var bolig  = parseFloat(document.getElementById('bolig').value)||0;
     var inntekt= parseFloat(document.getElementById('inntekt').value)||0;
     var region = parseFloat(document.getElementById('region').value)||1;
-    var hjemme = document.getElementById('hjemme').value;
 
     var careYears = helse==='god'?3 : helse==='svekket'?8 : 5;
-    var infl = 1.03;
-    // average inflation multiplier across the care window (mid-point compounding)
-    var inflFactor = Math.pow(infl, careYears/2 + 5); // care assumed to start ~5 yrs out
+    var inflFactor = Math.pow(INFL, careYears/2 + 5);
     var assets = formue + bolig;
+    var timer = BEHOV_TIMER[behov];
 
-    // annual costs (kr/yr), region-adjusted
-    var privatYr = 75000*12*region;            // premium private nursing home
-    var egenYr   = 50000*12*region;            // self-funded home care
-    if(hjemme==='hjemme') egenYr *= 1.1;        // wanting to stay home costs a bit more
-    var fribelop = 110000;                      // approx income shielded from egenandel
-    var egenandelYr = Math.min(0.85*Math.max(inntekt - fribelop,0), 430000);
+    var egenYr   = timer*52*TIMEPRIS*region;          // privat hjelp hjemme
+    var privatYr = INST_MND*12*region;                // privat institusjon
+    var offentligYr = behov==='omfattende'
+      ? egenandelLangtid(inntekt)                     // sykehjem egenandel (av inntekt)
+      : (inntekt < 2*G ? 250*12 : 1500*12);           // praktisk bistand (hjemmesykepleie gratis)
 
-    var costPrivat = privatYr * careYears * inflFactor;
     var costEgen   = egenYr   * careYears * inflFactor;
-    var costOff    = egenandelYr * careYears * inflFactor;
+    var costPrivat = privatYr * careYears * inflFactor;
+    var costOff    = offentligYr * careYears * inflFactor;
 
     return {
       careYears: careYears,
-      egen:      { remaining: Math.max(0, assets-costEgen),   cost: costEgen },
       offentlig: { remaining: Math.max(0, assets-costOff),    cost: costOff },
+      egen:      { remaining: Math.max(0, assets-costEgen),   cost: costEgen },
       privat:    { remaining: Math.max(0, assets-costPrivat), cost: costPrivat },
       assets: assets
     };
@@ -355,7 +362,7 @@
     var cols = { egen:r.egen, offentlig:r.offentlig, privat:r.privat };
     var maxRem = Math.max(r.egen.remaining, r.offentlig.remaining, r.privat.remaining, 1);
     var bestKey = Object.keys(cols).reduce(function(a,b){ return cols[a].remaining>=cols[b].remaining?a:b; });
-    var bestLabel = {egen:'Egenfinansiering (hjemme)', offentlig:'Offentlig + egenandel', privat:'Privat pleie'}[bestKey];
+    var bestLabel = {egen:'Privat hjelp hjemme', offentlig:'Offentlig (kommunal) med egenandel', privat:'Privat institusjon / bofellesskap'}[bestKey];
 
     Object.keys(cols).forEach(function(key){
       var el = document.querySelector('.col[data-col="'+key+'"]');
